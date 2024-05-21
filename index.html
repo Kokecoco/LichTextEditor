@@ -1,238 +1,112 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
+<html lang="ja">
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lich Text Editor by Editor.js</title>
+    <title>CKEditor 5 縦書きエディタ</title>
     <style>
+        /* エディタコンテナ全体のスタイル */
+        .ck-editor__editable_inline {
+            writing-mode: vertical-rl;
+            height: 600px; /* 必要に応じて高さを調整 */
+            overflow: auto; /* オーバーフロー対策 */
+            border: 1px solid #ccc; /* 視覚的に区切るためのボーダー */
+            box-sizing: border-box; /* ボーダーのサイズも幅に含める */
+            padding: 16px; /* 編集エリアの内側に余白を追加 */
+        }
+
+        /* ツールバーとエディタの幅を一致させるためのスタイル */
+        .ck-editor__main {
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .ck-editor__editable {
+            width: 100%;
+            box-sizing: border-box; /* ボーダーのサイズも幅に含める */
+        }
+
+        /* テキストの上下に余白を追加 */
+        .ck-editor__editable p {
+            margin-top: 28.8px; /* 上部の余白 */
+            margin-bottom: 28.8px; /* 下部の余白 */
+            margin-right: 5px; /* 右側の余白 */
+            margin-left: 5px; /* 左側の余白 */
+        }
+
+        .ck-editor__editable h1 {
+            margin-top: 28.8px; /* 上部の余白 */
+            margin-bottom: 28.8px; /* 下部の余白 */
+            margin-right: 16px; /* 右側の余白 */
+            margin-left: 16px; /* 左側の余白 */
+        }
+
+        .ck-editor__editable h2 {
+            margin-top: 28.8px; /* 上部の余白 */
+            margin-bottom: 28.8px; /* 下部の余白 */
+            margin-right: 16px; /* 右側の余白 */
+            margin-left: 16px; /* 左側の余白 */
+        }
+
+        .ck-editor__editable h3 {
+            margin-top: 28.8px; /* 上部の余白 */
+            margin-bottom: 28.8px; /* 下部の余白 */
+            margin-right: 16px; /* 右側の余白 */
+            margin-left: 16px; /* 左側の余白 */
+        }
     </style>
-    <link rel="stylesheet" href="color.css">
-  </head>
-  <body>
-    <div id="editorjs"></div>
-    <!-- Editor.js JS -->
-    <script
-      src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@latest"></script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/@editorjs/header@latest"></script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/@editorjs/list@latest"></script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/@editorjs/paragraph@latest"></script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/@editorjs/underline@latest"></script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/@editorjs/marker@latest"></script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/@editorjs/code@latest"></script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/@editorjs/delimiter@latest"></script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/@editorjs/image@latest"></script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/@editorjs/embed@latest"></script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/@editorjs/link@latest"></script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/@editorjs/quote@latest"></script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/@editorjs/warning@latest"></script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/@editorjs/table@latest"></script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/@editorjs/checklist@latest"></script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/@quanzo/change-font-size@latest"></script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/@editorjs/inline-code@latest"></script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/@editorjs/nested-list@latest"></script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/@calumk/editorjs-nested-checklist@latest"></script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/@editorjs/simple-image"></script>
-    <script src="https://cdn.jsdelivr.net/npm/editorjs-drag-drop"></script>
-    <script src="https://cdn.jsdelivr.net/npm/editorjs-undo"></script>
-    <script src="https://cdn.jsdelivr.net/npm/editorjs-html@3.4.0/build/edjsHTML.browser.js"></script>
-    <script src="color.js"></script>
-    <script src="plugins.js"></script>
+</head>
+<body>
+    <h1>CKEditor 5 縦書きエディタ</h1>
+    <div id="editor"></div>
+    <button id="capture">キャプチャして保存</button>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.min.js"></script>
+    <script src="ckeditor5/build/ckeditor.js"></script>
     <script>
-        class MarkerTool {
+        ClassicEditor
+            .create(document.querySelector('#editor'))
+            .then(editor => {
+                const toolbarContainer = editor.ui.view.toolbar.element.parentElement;
+                const editableElement = editor.ui.view.editable.element;
+                
+                // ツールバーとエディタの幅を一致させる
+                const resizeEditor = () => {
+                    const toolbarWidth = toolbarContainer.offsetWidth;
+                    editableElement.style.width = `${toolbarWidth}px`;
+                };
 
-            static get isInline() {
-                return true;
-            }
+                // 初期リサイズ
+                resizeEditor();
 
-            get state() {
-                return this._state;
-            }
+                // ウィンドウリサイズ時に再調整
+                window.addEventListener('resize', resizeEditor);
 
-            set state(state) {
-                this._state = state;
+                // ツールバーの変化を監視して幅を調整
+                new ResizeObserver(resizeEditor).observe(toolbarContainer);
 
-                this.button.classList.toggle(this.api.styles.inlineToolButtonActive, state);
-            }
+                document.getElementById('capture').addEventListener('click', () => {
+                    // キャプチャ対象要素
+                    const editorElement = editor.ui.view.editable.element;
 
-constructor({api}) {
-  this.api = api;
-  this.button = null;
-  this._state = false;
-
-  this.tag = 'MARK';
-  this.class = 'cdx-marker';
-}
-
-render() {
-  this.button = document.createElement('button');
-  this.button.type = 'button';
-  this.button.innerHTML = '<svg width="20" height="18"><path d="M10.458 12.04l2.919 1.686-.781 1.417-.984-.03-.974 1.687H8.674l1.49-2.583-.508-.775.802-1.401zm.546-.952l3.624-6.327a1.597 1.597 0 0 1 2.182-.59 1.632 1.632 0 0 1 .615 2.201l-3.519 6.391-2.902-1.675zm-7.73 3.467h3.465a1.123 1.123 0 1 1 0 2.247H3.273a1.123 1.123 0 1 1 0-2.247z"/></svg>';
-  this.button.classList.add(this.api.styles.inlineToolButton);
-
-  return this.button;
-}
-
-surround(range) {
-  if (this.state) {
-    this.unwrap(range);
-    return;
-  }
-
-  this.wrap(range);
-}
-
-wrap(range) {
-  const selectedText = range.extractContents();
-  const mark = document.createElement(this.tag);
-
-  mark.classList.add(this.class);
-  mark.appendChild(selectedText);
-  range.insertNode(mark);
-
-  this.api.selection.expandToTag(mark);
-}
-
-unwrap(range) {
-  const mark = this.api.selection.findParentTag(this.tag, this.class);
-  const text = range.extractContents();
-
-  mark.remove();
-
-  range.insertNode(text);
-}
-
-
-checkState() {
-  const mark = this.api.selection.findParentTag(this.tag);
-
-  this.state = !!mark;
-
-  if (this.state) {
-    this.showActions(mark);
-  } else {
-    this.hideActions();
-  }
-}
-
-renderActions() {
-  this.colorPicker = document.createElement('input');
-  this.colorPicker.type = 'color';
-  this.colorPicker.value = '#f5f1cc';
-  this.colorPicker.hidden = true;
-
-  return this.colorPicker;
-}
-
-showActions(mark) {
-  const {backgroundColor} = mark.style;
-  this.colorPicker.value = backgroundColor ? this.convertToHex(backgroundColor) : '#f5f1cc';
-
-  this.colorPicker.onchange = () => {
-    mark.style.backgroundColor = this.colorPicker.value;
-  };
-  this.colorPicker.hidden = false;
-}
-
-hideActions() {
-  this.colorPicker.onchange = null;
-  this.colorPicker.hidden = true;
-}
-
-convertToHex(color) {
-  const rgb = color.match(/(\d+)/g);
-
-  let hexr = parseInt(rgb[0]).toString(16);
-  let hexg = parseInt(rgb[1]).toString(16);
-  let hexb = parseInt(rgb[2]).toString(16);
-
-  hexr = hexr.length === 1 ? '0' + hexr : hexr;
-  hexg = hexg.length === 1 ? '0' + hexg : hexg;
-  hexb = hexb.length === 1 ? '0' + hexb : hexb;
-
-  return '#' + hexr + hexg + hexb;
-}
-static get sanitize() {
-      return {
-          mark: {
-              class: 'cdx-marker'
-          }
-      };
-  }
-}
-        const editor = new EditorJS({
-            onReady: () => {
-                new Undo({ editor });
-                new DragDrop(editor);
-            },
-            autofocus: true,
-            holder: 'editorjs',
-            tools:{
-                Marker: {
-                    class: MarkerTool,
-                    shortcut: 'CMD+SHIFT+M',
-                },
-                plus10percent: {
-                    class: ChangeFontSize,
-                },
-                header: Header,
-                list: {
-                    class: NestedList,
-                    inlineToolbar: true,
-                    config: {
-                    defaultStyle: 'unordered'
-                    },
-                },
-                code:CodeTool,
-                quote: Quote,
-                checklist: Checklist,
-                nestedchecklist : editorjsNestedChecklist,
-                table: Table,
-                embed: {
-                    class: Embed,
-                    config: {
-                        services: {
-                            youtube: true,
-                            twitter: true,
-                            codepen: true,
-                        },
-                    },
-                },
-                inlineCode: {
-                    class: InlineCode,
-                    shortcut: 'CMD+SHIFT+M',
-                },
-                image: SimpleImage,
-                delimiter: Delimiter,
-                warning: Warning,
-                colorPickerTool: {
-                  class: ColorPickerTool,
-                  inlineToolbar: true,
-                },
-                vertical: {
-                  class: VerticalTextTool,
-                },
-            },
-        });
+                    // dom-to-imageでキャプチャ
+                    domtoimage.toBlob(editorElement)
+                        .then(blob => {
+                            // 画像として保存
+                            const link = document.createElement('a');
+                            link.href = URL.createObjectURL(blob);
+                            link.download = 'editor-content.png';
+                            link.click();
+                        })
+                        .catch(error => {
+                            console.error('キャプチャエラー:', error);
+                        });
+                });
+            })
+            .catch(error => {
+                console.error(error);
+            });
     </script>
-  </body>
+</body>
 </html>
