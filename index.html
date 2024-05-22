@@ -9,6 +9,14 @@
       gtag('js', new Date());
     
       gtag('config', 'G-G6MX5YV63S');
+
+      document.getElementById('capture').addEventListener('click', function() {
+        gtag('event', 'click', {
+          'event_category': 'button',
+          'event_label': 'capture',
+          'value': 1
+        });
+      });
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
