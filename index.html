@@ -22,6 +22,65 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>縦書きエディタ</title>
     <style>
+        /* マテリアルデザインの色 */
+:root {
+  --md-primary-color: #2196F3;
+  --md-secondary-color: #FFC107;
+}
+
+/* エディターのコンテナ */
+.ck-editor__editable {
+  padding: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-family: 'Roboto', sans-serif;
+  font-size: 16px;
+}
+
+/* ツールバーコンテナ */
+.ck.ck-toolbar {
+  background-color: var(--md-primary-color);
+}
+
+/* ツールバーアイテム */
+.ck.ck-toolbar .ck-button {
+  color: white;
+}
+
+/* ツールバーボタン */
+.ck.ck-toolbar .ck-button:hover {
+  background-color: var(--md-secondary-color);
+}
+
+/* ツールチップ */
+.ck.ck-tooltip {
+  background-color: var(--md-primary-color);
+  color: white;
+}
+
+/* ツールチップのアイテム */
+.ck.ck-tooltip .ck-tooltip__text {
+  color: white;
+}
+
+/* リンク */
+.ck.ck-content .ck-link {
+  color: var(--md-secondary-color);
+  text-decoration: underline;
+}
+
+/* リンク：hover */
+.ck.ck-content .ck-link:hover {
+  color: var(--md-primary-color);
+}
+
+/* 強調テキスト */
+.ck.ck-content .ck-highlight {
+  background-color: var(--md-secondary-color);
+  color: white;
+}
+
+        
         /* エディタコンテナ全体のスタイル */
         .ck-editor__editable_inline {
             writing-mode: vertical-rl;
