@@ -1,6 +1,13 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+    
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@materializecss/materialize@2.0.3-alpha/dist/css/materialize.min.css">
+
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/@materializecss/materialize@2.0.3-alpha/dist/js/materialize.min.js"></script>
+            
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-G6MX5YV63S"></script>
     <script>
@@ -136,7 +143,7 @@
 <body>
     <h1>縦書きエディタ</h1>
     <div id="editor"></div>
-    <button id="capture" onclick="analytics()">キャプチャして保存</button>
+    <button id="capture" class="btn filled blue waves-effect waves-light" onclick="analytics()">キャプチャして保存</button>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.min.js"></script>
     <script src="ckeditor5/build/ckeditor.js"></script>
