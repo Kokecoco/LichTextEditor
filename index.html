@@ -1,139 +1,101 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    
-    <!-- Compiled and minified CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@materializecss/materialize@2.0.3-alpha/dist/css/materialize.min.css">
-
-    <!-- Compiled and minified JavaScript -->
-    <script src="https://cdn.jsdelivr.net/npm/@materializecss/materialize@2.0.3-alpha/dist/js/materialize.min.js"></script>
-            
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-G6MX5YV63S"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-    
-      gtag('config', 'G-G6MX5YV63S');
-
-      const analytics = () => {
-          gtag('event', 'capture', {
-          'event_category': 'button',
-          'event_label': 'capture',
-          'value': 1
-        });
-      }
-    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>縦書きエディタ</title>
+    <title>縦書きリッチテキストエディタ</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@material-ui/core@4.11.4/dist/material-ui.min.css">
+    <link rel="stylesheet" href="https://cdn.ckeditor.com/ckeditor5/34.0.0/classic/themes/lark.css">
     <style>
-        h1 {
-            font-size: 2rem;
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 20px;
         }
-/* エディタコンテナ全体のスタイル */
-        .ck-editor__editable_inline {
-            writing-mode: vertical-rl;
-            height: 400px; /* 必要に応じて高さを調整 */
-            overflow: auto; /* オーバーフロー対策 */
-            border: 1px solid #ccc; /* 視覚的に区切るためのボーダー */
-            box-sizing: border-box; /* ボーダーのサイズも幅に含める */
-            padding: 16px; /* 編集エリアの内側に余白を追加 */
-        }
-
-        /* ツールバーとエディタの幅を一致させるためのスタイル */
-        .ck-editor__main {
+        .editor-container {
             display: flex;
             flex-direction: column;
-            align-items: stretch;
+            align-items: center;
         }
-
+        #editor {
+            width: 600px;
+            height: 800px;
+            border: 1px solid #ddd;
+        }
+        #toolbar {
+            margin-bottom: 10px;
+        }
         .ck-editor__editable {
-            width: 100%;
-            box-sizing: border-box; /* ボーダーのサイズも幅に含める */
-        }
-
-        /* テキストの上下に余白を追加 */
-        .ck-editor__editable p {
-            margin-top: 28.8px; /* 上部の余白 */
-            margin-bottom: 28.8px; /* 下部の余白 */
-            margin-right: 5px; /* 右側の余白 */
-            margin-left: 5px; /* 左側の余白 */
-        }
-
-        .ck-editor__editable h1 {
-            margin-top: 28.8px; /* 上部の余白 */
-            margin-bottom: 28.8px; /* 下部の余白 */
-            margin-right: 16px; /* 右側の余白 */
-            margin-left: 16px; /* 左側の余白 */
-        }
-
-        .ck-editor__editable h2 {
-            margin-top: 28.8px; /* 上部の余白 */
-            margin-bottom: 28.8px; /* 下部の余白 */
-            margin-right: 16px; /* 右側の余白 */
-            margin-left: 16px; /* 左側の余白 */
-        }
-
-        .ck-editor__editable h3 {
-            margin-top: 28.8px; /* 上部の余白 */
-            margin-bottom: 28.8px; /* 下部の余白 */
-            margin-right: 16px; /* 右側の余白 */
-            margin-left: 16px; /* 左側の余白 */
+            writing-mode: vertical-rl;
+            text-orientation: upright;
+            padding: 10px;
+            font-size: 20px;
+            line-height: 1.5;
+            width: calc(100% - 25.6px);
         }
     </style>
 </head>
 <body>
-    <h1>縦書きエディタ</h1>
-    <div id="editor"></div>
-    <button id="capture" class="btn filled blue waves-effect waves-light" onclick="analytics()">キャプチャして保存</button>
-
+    <div class="editor-container">
+        <div id="toolbar">
+            <button id="captureBtn" class="material-icons">camera_alt</button>
+        </div>
+        <div id="editor"></div>
+    </div>
+    <script src="https://cdn.ckeditor.com/ckeditor5/34.0.0/classic/ckeditor.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.min.js"></script>
-    <script src="ckeditor5/build/ckeditor.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@material-ui/core@4.11.4/dist/material-ui.min.js"></script>
+    <script src="https://unpkg.com/@material-ui/icons@4.11.2/index.js"></script>
     <script>
         ClassicEditor
-            .create(document.querySelector('#editor'))
-            .then(editor => {
-                const toolbarContainer = editor.ui.view.toolbar.element.parentElement;
-                const editableElement = editor.ui.view.editable.element;
-                
-                // ツールバーとエディタの幅を一致させる
-                const resizeEditor = () => {
-                    const toolbarWidth = toolbarContainer.offsetWidth;
-                    editableElement.style.width = `${toolbarWidth}px`;
-                };
-
-                // 初期リサイズ
-                resizeEditor();
-
-                // ウィンドウリサイズ時に再調整
-                window.addEventListener('resize', resizeEditor);
-
-                // ツールバーの変化を監視して幅を調整
-                new ResizeObserver(resizeEditor).observe(toolbarContainer);
-
-                document.getElementById('capture').addEventListener('click', () => {
-                    // キャプチャ対象要素
-                    const editorElement = editor.ui.view.editable.element;
-
-                    // dom-to-imageでキャプチャ
-                    domtoimage.toBlob(editorElement)
-                        .then(blob => {
-                            // 画像として保存
-                            const link = document.createElement('a');
-                            link.href = URL.createObjectURL(blob);
-                            link.download = 'editor-content.png';
-                            link.click();
-                        })
-                        .catch(error => {
-                            console.error('キャプチャエラー:', error);
-                        });
-                });
+            .create(document.querySelector('#editor'), {
+                toolbar: [
+                    'heading', '|', 
+                    'bold', 'italic', 'underline', 'strikethrough', '|',
+                    'fontSize', 'fontFamily', '|',
+                    'fontColor', 'fontBackgroundColor', '|',
+                    'link', 'bulletedList', 'numberedList', 'blockQuote', '|',
+                    'undo', 'redo'
+                ],
+                fontSize: {
+                    options: [
+                        'tiny',
+                        'default',
+                        'big',
+                        'huge'
+                    ]
+                },
+                fontFamily: {
+                    options: [
+                        'default',
+                        'Arial, Helvetica, sans-serif',
+                        'Courier New, Courier, monospace',
+                        'Georgia, serif',
+                        'Lucida Sans Unicode, Lucida Grande, sans-serif',
+                        'Tahoma, Geneva, sans-serif',
+                        'Times New Roman, Times, serif',
+                        'Trebuchet MS, Helvetica, sans-serif',
+                        'Verdana, Geneva, sans-serif'
+                    ]
+                },
+                language: 'ja'
             })
             .catch(error => {
                 console.error(error);
             });
+
+        document.getElementById('captureBtn').addEventListener('click', function() {
+            domtoimage.toPng(document.querySelector('#editor'))
+                .then(function(dataUrl) {
+                    let link = document.createElement('a');
+                    link.download = 'editor-content.png';
+                    link.href = dataUrl;
+                    link.click();
+                })
+                .catch(function(error) {
+                    console.error('oops, something went wrong!', error);
+                });
+        });
     </script>
 </body>
 </html>
