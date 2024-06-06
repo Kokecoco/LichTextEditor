@@ -13,109 +13,27 @@
             rel="stylesheet"
             integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM"
             crossorigin="anonymous">
-        <style>
-        .btn-theme {
-            --bs-btn-color: #fff;
-            --bs-btn-bg: #3c3c6c;
-            --bs-btn-border-color: #3c3c6c;
-            --bs-btn-hover-color: #fff;
-            --bs-btn-hover-bg: #32335b;
-            --bs-btn-hover-border-color: #2e3056;
-            --bs-btn-focus-shadow-rgb: 49, 132, 253;
-            --bs-btn-active-color: #fff;
-            --bs-btn-active-bg: #2e3056;
-            --bs-btn-active-border-color: #2e2d51;
-            --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
-            --bs-btn-disabled-color: #fff;
-            --bs-btn-disabled-bg: #3c3c6c;
-            --bs-btn-disabled-border-color: #3c3c6c;
-        }
-        .btn-theme-black {
-            --bs-btn-color: #000;
-            --bs-btn-bg: #3c3c6c;
-            --bs-btn-border-color: #3c3c6c;
-            --bs-btn-hover-color: #000;
-            --bs-btn-hover-bg: #32335b;
-            --bs-btn-hover-border-color: #2e3056;
-            --bs-btn-focus-shadow-rgb: 49, 132, 253;
-            --bs-btn-active-color: #000;
-            --bs-btn-active-bg: #2e3056;
-            --bs-btn-active-border-color: #2e2d51;
-            --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
-            --bs-btn-disabled-color: #000;
-            --bs-btn-disabled-bg: #3c3c6c;
-            --bs-btn-disabled-border-color: #3c3c6c;
-        }
-        .ck-reset {
-            width: 100%;
-        }
-        body {
-            font-family: 'Roboto', sans-serif;
-            margin: 20px;
-            background-color: gainsboro;
-        }
-        .editor-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        #editor {
-            width: 600px;
-            height: 800px;
-            border: 1px solid #ddd;
-        }
-        #toolbar {
-            margin-top: 10px;
-            margin-bottom: 10px;
-            text-align: center;
-        }
-        .ck-editor__editable {
-            writing-mode: vertical-rl;
-            width: 100%;
-            height: calc(100vh - 270px);
-        }
-        .ck-editor{
-            width: 80%;
-            height: 100%;
-        }
-        .ck-editor__editable p {
-            margin: var(--ck-spacing-large) 0;
-        }
-        .ck-editor__editable h1 {
-            font-size: 30px;
-            margin-top: 14.4px  !important;
-            margin-bottom: 14.4px  !important;
-        }
-        .ck.ck-editor__editable_inline>:first-child {
-            margin-top: 14.4px;
-        }
-        .ck.ck-editor__editable_inline>:last-child {
-            margin-bottom: 14.4px;
-        }
-        .title {
-            margin-top: 10px;
-            text-align: center;
-            font-family: 'Noto Sans JP', Arial, sans-serif;
-        }
-    </style>
+        <link rel="stylesheet" href="styles.css">
     </head>
     <body>
-        <div class="container">
-            <div class="card">
-                <h1 class="card-title title">縦書きテキストエディタ</h1>
-                <div class="card-body">
-                    <div class="editor-container">
-                        <div id="editor"></div>
+        <main>
+            <div class="container">
+                <div class="card">
+                    <h1 class="card-title title">縦書きテキストエディタ</h1>
+                    <div class="card-body">
+                        <div class="editor-container">
+                            <div id="editor"></div>
+                        </div>
                     </div>
-                </div>
-                <div class="card-body">
-                    <div id="toolbar">
-                        <button id="captureBtn"
-                            class="btn btn-theme">画像として保存</button>
+                    <div class="card-footer">
+                        <div id="toolbar">
+                            <button id="captureBtn"
+                                class="btn btn-theme">画像として保存</button>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </main>
         <!-- CKEditor 5 custom build -->
         <script src="./ckeditor/build/ckeditor.js"></script>
         <script
@@ -124,150 +42,6 @@
             src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
             crossorigin="anonymous"></script>
-        <script>
-        // フォントサイズを調整する関数
-        function adjustFontSize(delta) {
-            const editor = window.editor;
-            const selection = editor.model.document.selection;
-
-            editor.model.change(writer => {
-                const selectedElements = selection.getSelectedBlocks();
-                for (const element of selectedElements) {
-                    const currentFontSize = element.getAttribute('fontSize') || '16px';
-                    const currentSize = parseInt(currentFontSize, 10);
-                    const newSize = currentSize + delta;
-                    if (newSize >= 1) {
-                        writer.setAttribute('fontSize', newSize + 'px', element);
-                    }
-                }
-            });
-        }
-
-        ClassicEditor
-            .create(document.querySelector('#editor'), {
-                toolbar: [
-                    'heading', '|',
-                    'bold', 'italic', 'underline', 'strikethrough', '|',
-                    'fontFamily', '|',
-                    'fontColor', 'fontBackgroundColor', '|',
-                    'link', 'bulletedList', 'numberedList', 'blockQuote', '|',
-                    'fontSize', '|',
-                    'undo', 'redo'
-                ],
-                language: 'ja',
-                fontSize: {
-                    options: [
-                        8, 10, 12, 16, 20, 24, 36
-                    ]
-                },
-                fontFamily: {
-                    options: [
-                        'default', 'Arial, sans-serif', 'Georgia, serif', 'Impact, Charcoal, sans-serif', 'Tahoma, Geneva, sans-serif', 'Verdana, Geneva, sans-serif', 'Comic Sans MS, cursive', 'Courier New, Courier, monospace', 'Lucida Console, Monaco, monospace', 'Times New Roman, Times, serif', 'Roboto, sans-serif', 'Noto Sans JP, sans-serif', 'Noto Serif JP, serif'
-                    ]
-                },
-                image: {
-                    toolbar: [
-                        'imageTextAlternative'
-                    ]
-                },
-                table: {
-                    contentToolbar: [
-                        'tableColumn', 'tableRow', 'mergeTableCells'
-                    ]
-                },
-                bulletedList: {
-                    types: ['bulleted', 'circled', 'disc', 'squared']
-                },
-                heading: {
-                    options: [
-                        { model: 'paragraph', title: '標準テキスト', class: 'ck-heading_paragraph' },
-                        { model: 'heading1', view: 'h1', title: '見出し 1', class: 'ck-heading_heading1' },
-                        { model: 'heading2', view: 'h2', title: '見出し 2', class: 'ck-heading_heading2' },
-                        { model: 'heading3', view: 'h3', title: '見出し 3', class: 'ck-heading_heading3' }
-                    ]
-                },
-                link: {
-                    addTargetToExternalLinks: true
-                },
-                blockQuote: {
-                    toolbar: [
-                        'blockQuote'
-                    ]
-                },
-                list: {
-                    toolbar: [
-                        'bulletedList', 'numberedList'
-                    ]
-                },
-                table: {
-                    contentToolbar: [
-                        'tableColumn', 'tableRow', 'mergeTableCells'
-                    ]
-                },
-                typing: {
-                    transformations: {
-                        remove: [
-                            'link'
-                        ]
-                    }
-                },
-                contentsCss: [
-                    'https://cdn.jsdelivr.net/npm/@material-ui/core@4.11.4/dist/material-ui.min.css',
-                    'https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap',
-                    'https://fonts.googleapis.com/icon?family=Material+Icons',
-                    "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css",
-                    "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css"
-                ]
-            })
-            .then(editor => {
-                window.editor = editor;
-
-                // ツールバーのコンテナにクラスを追加
-                const toolbarElement = editor.ui.view.toolbar.element;
-                toolbarElement.classList.add('btn-group');
-                toolbarElement.classList.add('btn-group-sm');
-
-                // ツールバーのコンテナから ck-reset_all クラスを削除
-                toolbarElement.classList.remove('ck-reset_all');
-
-                const editorElement = editor.ui.view.element;
-
-                editorElement.classList.remove('ck-reset');
-                editorElement.classList.add('card');
-
-                const topElement = editorElement.querySelector('.ck-editor__top.ck-reset_all');
-
-                if (topElement) {
-                    // クラスを削除
-                    topElement.classList.remove('ck-reset_all');
-                }
-
-                const toolbarButtons = editor.ui.view.toolbar.items._items;
-                toolbarButtons.forEach(button => {
-                    if (button.type === 'button') {
-                        button.element.classList.add('btn');
-                        button.element.classList.add('btn-theme-black');
-                        button.element.classList.add('btn-sm');
-                        button.element.classList.remove('ck-off');
-                    }
-                });
-            })
-            .catch(error => {
-                console.error(error);
-            });
-
-        document.getElementById('captureBtn').addEventListener('click', function() {
-            domtoimage.toPng(document.querySelector('.ck-editor__editable'))
-                .then(function(dataUrl) {
-                    let link = document.createElement('a');
-                    link.download = 'editor-content.png';
-                    link.href = dataUrl;
-                    link.click();
-                })
-                .catch(function(error) {
-                    console.error('oops, something went wrong!', error);
-                });
-        });
-    </script>
+        <script src="scripts.js"></script>
     </body>
 </html>
