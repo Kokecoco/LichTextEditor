@@ -14,6 +14,38 @@
             integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM"
             crossorigin="anonymous">
         <style>
+        .btn-theme {
+            --bs-btn-color: #fff;
+            --bs-btn-bg: #3c3c6c;
+            --bs-btn-border-color: #3c3c6c;
+            --bs-btn-hover-color: #fff;
+            --bs-btn-hover-bg: #32335b;
+            --bs-btn-hover-border-color: #2e3056;
+            --bs-btn-focus-shadow-rgb: 49, 132, 253;
+            --bs-btn-active-color: #fff;
+            --bs-btn-active-bg: #2e3056;
+            --bs-btn-active-border-color: #2e2d51;
+            --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+            --bs-btn-disabled-color: #fff;
+            --bs-btn-disabled-bg: #3c3c6c;
+            --bs-btn-disabled-border-color: #3c3c6c;
+        }
+        .btn-theme-black {
+            --bs-btn-color: #000;
+            --bs-btn-bg: #3c3c6c;
+            --bs-btn-border-color: #3c3c6c;
+            --bs-btn-hover-color: #000;
+            --bs-btn-hover-bg: #32335b;
+            --bs-btn-hover-border-color: #2e3056;
+            --bs-btn-focus-shadow-rgb: 49, 132, 253;
+            --bs-btn-active-color: #000;
+            --bs-btn-active-bg: #2e3056;
+            --bs-btn-active-border-color: #2e2d51;
+            --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+            --bs-btn-disabled-color: #000;
+            --bs-btn-disabled-bg: #3c3c6c;
+            --bs-btn-disabled-border-color: #3c3c6c;
+        }
         .ck-reset {
             width: 100%;
         }
@@ -79,7 +111,7 @@
                 <div class="card-body">
                     <div id="toolbar">
                         <button id="captureBtn"
-                            class="btn btn-primary">画像として保存</button>
+                            class="btn btn-theme">画像として保存</button>
                     </div>
                 </div>
             </div>
@@ -214,6 +246,7 @@
                 toolbarButtons.forEach(button => {
                     if (button.type === 'button') {
                         button.element.classList.add('btn');
+                        button.element.classList.add('btn-theme-black');
                         button.element.classList.add('btn-sm');
                         button.element.classList.remove('ck-off');
                     }
